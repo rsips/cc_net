@@ -1,0 +1,4 @@
+submitit INFO (2021-02-23 11:50:20,200) - Starting with JobEnvironment(job_id=84297, hostname=Robert-Jan-mT-MBP-6GTDY, local_rank=0(1), node=0(1), global_rank=0(1))
+submitit INFO (2021-02-23 11:50:20,200) - Loading pickle: /Users/robertjan/Repositories/cc_net/mnist_logs/84297_submitted.pkl
+*** Starting from stage '0' ***
+*** Entering stage 'Data Loading' ***

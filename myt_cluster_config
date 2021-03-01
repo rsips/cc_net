@@ -1,0 +1,45 @@
+
+[aws]
+aws_region_name = eu-west-1
+
+[aliases]
+ssh = ssh {CFN_USER}@{MASTER_IP} -i ~/myTomorrows/myTomorrows.pem {ARGS}
+
+[global]
+cluster_template = default
+update_check = true
+sanity_check = true
+
+[cluster default]
+key_name = myTomorrows
+scheduler = slurm
+master_instance_type = c4.large
+base_os = ubuntu1804
+vpc_settings = default
+queue_settings = compute
+fsx_settings = fs
+pre_install = https://myt-ai-cluster.s3-eu-west-1.amazonaws.com/slurm/pre_cluster_installation.sh
+post_install = https://myt-ai-cluster.s3.amazonaws.com/slurm/post_cluster_install.sh
+
+[vpc default]
+vpc_id = vpc-2156b044
+master_subnet_id = subnet-0a04cadbc9548ae77
+
+[queue compute]
+enable_efa = false
+enable_efa_gdr = false
+compute_resource_settings = default
+compute_type=spot
+
+[compute_resource default]
+instance_type = r5.8xlarge
+
+
+[fsx fs]
+shared_dir = /data
+storage_capacity = 10800
+deployment_type=SCRATCH_1
+imported_file_chunk_size = 1024
+export_path = s3://myt-ai-datasets/cc2019mined
+import_path = s3://myt-ai-datasets
+weekly_maintenance_start_time = 1:00:00

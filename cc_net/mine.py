@@ -299,7 +299,7 @@ def mine(conf: Config) -> List[Path]:
 
     # TODO: try to reduce this / make it a function of "hash_in_mem" / num_langs
     mem_gb = 60 + 1 * conf.hash_in_mem
-    timeout_hour = 5
+    timeout_hour = 15
     if "hashes" in conf.experiments:
         # HACK: used for generating paper figures
         outputs = [

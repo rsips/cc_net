@@ -13,7 +13,7 @@ sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.7 1
 #pip3 install cython --upgrade
 pip install cython --upgrade
 cd /home/ubuntu
-git clone https://github.com/facebookresearch/cc_net.git
+git clone https://github.com/rsips/cc_net.git
 cd cc_net 
 mkdir third_party
 cd third_party

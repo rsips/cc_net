@@ -107,7 +107,7 @@ class Config(NamedTuple):
             name,
             self.output_dir / "logs",
             self.execution,
-            timeout_hour=self.timeout,
+            timeout_hour=timeout_hour,
             mem_gb=mem_gb,
             cpus=cpus,
             task_parallelism=self.task_parallelism,

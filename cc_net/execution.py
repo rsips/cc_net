@@ -66,6 +66,7 @@ def get_executor(
     if task_parallelism == -1:
         task_parallelism = 500
 
+    print(f"setting timeout for the job to {int(timeout_hour * 60)}")
     ex.update_parameters(
         name=name,
         timeout_min=int(timeout_hour * 60),

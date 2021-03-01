@@ -36,7 +36,7 @@ def get_executor(
     name: str,
     log_dir: Path,
     execution: str,
-    timeout_hour: float = 1.0,
+    timeout_hour: float = 15.0,
     mem_gb: int = 1,
     cpus: int = 1,
     task_parallelism: int = -1,

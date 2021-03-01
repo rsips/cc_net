@@ -97,6 +97,7 @@ class Config(NamedTuple):
     pipeline: Sequence[str] = DEFAULT_PIPELINE
     experiments: Sequence[str] = []
     cache_dir: Optional[Path] = None
+    timeout: int = 30 
 
     def get_executor(
         self, name: str, timeout_hour: int = 1, mem_gb: int = 1, cpus: int = 1
@@ -106,7 +107,7 @@ class Config(NamedTuple):
             name,
             self.output_dir / "logs",
             self.execution,
-            timeout_hour=timeout_hour,
+            timeout_hour=self.timeout,
             mem_gb=mem_gb,
             cpus=cpus,
             task_parallelism=self.task_parallelism,
@@ -259,7 +260,7 @@ def hashes(conf: Config) -> List[Path]:
     hashes_dir.mkdir(parents=True, exist_ok=True)
     # With FlatHashSet we need ~2Gb of RAM / shard, but we need to account for
     # overhead due to how the dynamic allocation works.
-    ex = conf.get_executor(f"hashes_{conf.dump}", mem_gb=4, timeout_hour=6, cpus=2)
+    ex = conf.get_executor(f"hashes_{conf.dump}", mem_gb=4, timeout_hour=conf.timeout, cpus=2)
     ex(_hashes_shard, repeat(conf), *_transpose(missing_outputs))
 
     # Wait a bit so that files appears on the disk.
@@ -299,7 +300,7 @@ def mine(conf: Config) -> List[Path]:
 
     # TODO: try to reduce this / make it a function of "hash_in_mem" / num_langs
     mem_gb = 60 + 1 * conf.hash_in_mem
-    timeout_hour = 15
+    timeout_hour = conf.timeout
     if "hashes" in conf.experiments:
         # HACK: used for generating paper figures
         outputs = [
@@ -307,7 +308,7 @@ def mine(conf: Config) -> List[Path]:
             for h in HASHES_IN_MEM
         ]
         mem_gb = int(max(HASHES_IN_MEM) * 1.2)
-        timeout_hour = 8
+        timeout_hour = =conf.timeout*2
 
     missing_outputs = [(shard, o) for shard, o in enumerate(outputs) if not o.exists()]
 
@@ -495,7 +496,7 @@ def regroup(conf: Config, all_dirs: List[Path]) -> Path:
             f"shards ({n_existing} already there).",
         )
 
-    ex = conf.get_executor(f"regroup_{conf.dump}", mem_gb=1, timeout_hour=12, cpus=2)
+    ex = conf.get_executor(f"regroup_{conf.dump}", mem_gb=1, timeout_hour=conf.timeout, cpus=2)
     ex(_regroup, repeat(conf), inputs, outputs)
 
     return regroup_dir
@@ -520,7 +521,7 @@ def move_segments(conf: Config, all_dirs: Sequence[Path]) -> Path:
 
     regroup_dir.parent.mkdir(exist_ok=True)
     regroup_dir.mkdir(exist_ok=True)
-    ex = conf.get_executor(f"moveseg_{conf.dump}", mem_gb=1, timeout_hour=1, cpus=2)
+    ex = conf.get_executor(f"moveseg_{conf.dump}", mem_gb=1, timeout_hour=conf.timeout, cpus=2)
 
     def _move_segments(subdir: Path, regroup_dir: Path) -> str:
         n = 0

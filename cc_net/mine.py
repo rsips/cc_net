@@ -308,7 +308,7 @@ def mine(conf: Config) -> List[Path]:
             for h in HASHES_IN_MEM
         ]
         mem_gb = int(max(HASHES_IN_MEM) * 1.2)
-        timeout_hour = =conf.timeout*2
+        timeout_hour=conf.timeout*2
 
     missing_outputs = [(shard, o) for shard, o in enumerate(outputs) if not o.exists()]
 
